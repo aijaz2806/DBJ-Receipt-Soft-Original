@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DBJ - Receipt Generate Software</title>
+    <meta name="description" content="Receipt generation software for NIYAAZ-E-IMAM HUSSAIN (A.S), Udaipur">
+
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <style>
+        /* ========== CSS RESET & ROOT ========== */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --primary: #c8a96e;
+            --primary-dark: #a8893e;
+            --primary-glow: rgba(200, 169, 110, 0.35);
+            --bg-base: #0d0d14;
+            --bg-card: rgba(255, 255, 255, 0.04);
+            --bg-card-hover: rgba(255, 255, 255, 0.07);
+            --border: rgba(200, 169, 110, 0.25);
+            --border-focus: rgba(200, 169, 110, 0.7);
+            --text-primary: #f0ede6;
+            --text-muted: rgba(240, 237, 230, 0.55);
+            --success: #43AA8B;
+            --success-dark: #2d8a6d;
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 22px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            background-image:
+                radial-gradient(ellipse 80% 60% at 50% -20%, rgba(200, 169, 110, 0.18) 0%, transparent 70%),
+                url('assets/bg-3.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-blend-mode: overlay;
+            min-height: 100vh;
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ========== SCROLLBAR ========== */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* ========== SPLASH SCREEN ========== */
+        .bg-overlay {
+            position: fixed;
+            inset: 0;
+            background: #0d0d14;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            gap: 2rem;
+        }
+
+        .my-box {
+            width: min(75vw, 420px);
+            height: auto;
+            filter: drop-shadow(0 0 40px rgba(200, 169, 110, 0.45));
+            animation: splashPulse 2s ease-in-out infinite;
+        }
+
+        .splash-bar {
+            width: min(75vw, 300px);
+            height: 3px;
+            background: rgba(200, 169, 110, 0.15);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .splash-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+            border-radius: 99px;
+            animation: loadBar 2.2s ease-in-out forwards;
+        }
+
+        @keyframes splashPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.025);
+                opacity: 0.9;
+            }
+        }
+
+        @keyframes loadBar {
+            0% {
+                width: 0%;
+            }
+
+            100% {
+                width: 100%;
+            }
+        }
+
+        /* ========== MAIN LAYOUT ========== */
+        .receipt-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        .receipt-card {
+            width: min(680px, 98vw);
+            background: rgba(18, 16, 28, 0.72);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            box-shadow:
+                0 0 0 1px rgba(200, 169, 110, 0.08),
+                0 20px 60px rgba(0, 0, 0, 0.55),
+                0 0 80px rgba(200, 169, 110, 0.07);
+            overflow: hidden;
+            animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            background: linear-gradient(135deg, rgba(200, 169, 110, 0.12) 0%, rgba(200, 169, 110, 0.04) 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 1.6rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .header.hidden {
+            display: none;
+        }
+
+        .header-center {
+            flex: 1;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.1rem, 3vw, 1.6rem);
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            background: linear-gradient(135deg, #f0e6c8, var(--primary), #e8d5a0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.3;
+        }
+
+        .header h2 {
+            font-size: clamp(0.7rem, 1.8vw, 0.9rem);
+            font-weight: 400;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .header-right img {
+            width: 72px;
+            height: auto;
+            mix-blend-mode: screen;
+            filter:
+                drop-shadow(0 0 6px rgba(200, 169, 110, 0.50))
+                drop-shadow(0 2px 10px rgba(200, 169, 110, 0.30));
+            border-radius: 0;
+        }
+
+        /* ========== DIVIDER ========== */
+        .gold-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            opacity: 0.5;
+        }
+
+        /* ========== FORM AREA ========== */
+        .form-area {
+            padding: 2rem;
+        }
+
+        /* Date badge */
+        .date-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--primary);
+            background: rgba(200, 169, 110, 0.1);
+            border: 1px solid rgba(200, 169, 110, 0.2);
+            border-radius: 99px;
+            padding: 0.35rem 1rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.04em;
+        }
+
+        .date-badge i {
+            font-size: 0.9rem;
+        }
+
+        /* ========== FORM FIELDS ========== */
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+        }
+
+        .field-label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .field-label i {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .field-input,
+        .field-select {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 0.85rem 1rem;
+            outline: none;
+            transition: var(--transition);
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .field-input::placeholder {
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .field-input:focus,
+        .field-select:focus {
+            border-color: var(--border-focus);
+            background: rgba(200, 169, 110, 0.07);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+
+        .field-input:hover,
+        .field-select:hover {
+            border-color: rgba(200, 169, 110, 0.45);
+        }
+
+        /* Custom select wrapper */
+        .select-wrapper {
+            position: relative;
+        }
+
+        .select-wrapper::after {
+            content: '\F282';
+            font-family: 'bootstrap-icons';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            pointer-events: none;
+            font-size: 0.85rem;
+        }
+
+        .field-select option {
+            background: #1a1727;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        /* Amount row: prefix symbol */
+        .amount-wrapper {
+            position: relative;
+        }
+
+        .amount-prefix {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1rem;
+            pointer-events: none;
+        }
+
+        .amount-wrapper .field-input {
+            padding-left: 2rem;
+        }
+
+        /* ========== BUTTON ========== */
+        .buttons-position {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .save-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #d4b06a 0%, var(--primary-dark) 60%, #8a6e2a 100%);
+            color: #1a1208;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            border: 1px solid rgba(255, 220, 130, 0.45);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow:
+                0 4px 18px rgba(200, 169, 110, 0.38),
+                inset 0 1px 0 rgba(255, 240, 180, 0.3);
+            letter-spacing: 0.04em;
+            text-shadow: 0 1px 0 rgba(255, 240, 160, 0.35);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .save-button::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .save-button i {
+            font-size: 1.2rem;
+            color: #1a1208;
+        }
+
+        .save-button:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #e0c07a 0%, #c8a550 60%, #9a7e3a 100%);
+            box-shadow:
+                0 8px 30px rgba(200, 169, 110, 0.55),
+                0 0 0 1px rgba(255, 220, 130, 0.5),
+                inset 0 1px 0 rgba(255, 245, 200, 0.4);
+        }
+
+        .save-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(200, 169, 110, 0.3);
+        }
+
+        /* ========== FOOTER ========== */
+        .developer-footer {
+            border-top: 1px solid var(--border);
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .footer-content span {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            letter-spacing: 0.02em;
+        }
+
+        .footer-content strong {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .footer-content img {
+            height: 38px;
+            width: auto;
+            opacity: 0.8;
+            filter: grayscale(20%);
+            transition: var(--transition);
+        }
+
+        .footer-content img:hover {
+            opacity: 1;
+            filter: none;
+        }
+
+        /* ========== HIDDEN ========== */
+        .hidden {
+            display: none;
+        }
+
+        /* ========== FLATPICKR OVERRIDES ========== */
+        .flatpickr-calendar {
+            background: #1a1727 !important;
+            border: 1px solid var(--border) !important;
+            border-radius: var(--radius-md) !important;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6) !important;
+            color: var(--text-primary) !important;
+        }
+
+        /* ========== ANIMATIONS ========== */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out both;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="receipt-container">
+
+        <!-- ===== SPLASH SCREEN ===== -->
+        <div id="logo-screen" class="bg-overlay">
+            <img src="assets/bis-4.png" alt="Logo" class="my-box">
+            <div class="splash-bar">
+                <div class="splash-bar-fill"></div>
+            </div>
+        </div>
+
+        <!-- ===== MAIN CARD ===== -->
+        <div class="receipt-card fade-in">
+
+            <!-- HEADER -->
+            <div id="form-container" class="header hidden">
+                <div class="header-center">
+                    <h1>NIYAAZ-E-IMAM HUSSAIN (A.S)</h1>
+                    <h2>Udaipur, Rajasthan</h2>
+                </div>
+                <div class="header-right">
+                    <img src="assets/logo.png" alt="Logo">
+                </div>
+            </div>
+
+            <div class="gold-divider"></div>
+
+            <!-- FORM -->
+            <form id="user-form">
+                <div class="form-area">
+
+                    <!-- Date badge -->
+                    <div class="date-badge">
+                        <i class="bi bi-calendar3"></i>
+                        <span id="date"></span>
+                    </div>
+
+                    <div class="field-group">
+
+                        <!-- Receipt Type -->
+                        <div class="field-row">
+                            <label class="field-label" for="prefix">
+                                <i class="bi bi-receipt"></i> Receipt Type
+                            </label>
+                            <div class="select-wrapper">
+                                <select class="field-select" id="prefix" required></select>
+                            </div>
+                        </div>
+
+                        <!-- Name -->
+                        <div class="field-row">
+                            <label class="field-label" for="name">
+                                <i class="bi bi-person"></i> Name
+                            </label>
+                            <input class="field-input" type="text" id="name" placeholder="Enter full name" required>
+                        </div>
+
+                        <!-- Amount -->
+                        <div class="field-row">
+                            <label class="field-label" for="amount">
+                                <i class="bi bi-currency-rupee"></i> Amount
+                            </label>
+                            <div class="amount-wrapper">
+                                <span class="amount-prefix">₹</span>
+                                <input class="field-input" type="number" id="amount" placeholder="0.00" required>
+                            </div>
+                        </div>
+
+                        <!-- Regarding -->
+                        <div class="field-row">
+                            <label class="field-label" for="purpose">
+                                <i class="bi bi-chat-square-text"></i> Regarding
+                            </label>
+                            <input class="field-input" type="text" id="purpose" placeholder="Purpose / Occasion"
+                                required>
+                        </div>
+
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="buttons-position">
+                        <button type="submit" id="save-print-btn" class="save-button">
+                            <i class="bi bi-printer-fill"></i>
+                            Save &amp; Print
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+
+            <!-- FOOTER -->
+            <div class="developer-footer">
+                <div class="footer-content">
+                    <span>&copy; 2025 All Rights Reserved. Made By &mdash; <strong>AIJAZ AHMED SIYAHI</strong></span>
+                    <img src="assets/aijaz-logo.png" alt="Developer Logo">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Splash → form transition
+            setTimeout(() => {
+                document.getElementById("logo-screen").style.display = "none";
+                document.getElementById("form-container").classList.remove("hidden");
+            }, 2500);
+
+            // Date display
+            document.getElementById("date").innerText = new Date().toLocaleDateString('en-GB', {
+                day: '2-digit', month: 'short', year: 'numeric'
+            }).replace(/ /g, '-');
+        });
+    </script>
+
+</body>
+
+</html>

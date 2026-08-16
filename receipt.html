@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Receipt - NIYAAZ-E-IMAM HUSSAIN</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap"
+    rel="stylesheet">
+
+  <style>
+    /* ===== RESET ===== */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ===== BASE ===== */
+    body {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background: #e8e0d0;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 24px 0;
+    }
+
+    /* ===== A5 CONTAINER ===== */
+    .main-container {
+      width: 559px;
+      min-height: 500px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== RECEIPT CARD ===== */
+    .receipt-container {
+      width: 100%;
+      flex: 1;
+      background: #faf7f0;
+      border: 1px solid #c8a96e;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 4px rgba(200, 169, 110, 0.12),
+        0 8px 40px rgba(0, 0, 0, 0.18);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== HEADER BAND ===== */
+    .header-band {
+      background: linear-gradient(135deg, #1a1612 0%, #2a2218 60%, #1a1612 100%);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 2px solid #c8a96e;
+    }
+
+    .header-center {
+      flex: 1;
+      text-align: center;
+    }
+
+    .header-center h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      background: linear-gradient(135deg, #f0e6c8, #c8a96e, #e8d5a0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.3;
+      margin-bottom: 3px;
+    }
+
+    .header-center h2 {
+      font-size: 10px;
+      font-weight: 400;
+      color: rgba(200, 169, 110, 0.65);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .header-right img {
+      width: 56px;
+      height: auto;
+      filter: drop-shadow(0 2px 6px rgba(200, 169, 110, 0.4));
+      border-radius: 50%;
+    }
+
+    /* ===== GOLD RULE ===== */
+    .gold-rule {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #c8a96e 30%, #c8a96e 70%, transparent);
+      opacity: 0.6;
+    }
+
+    /* ===== RECEIPT BODY ===== */
+    .receipt-body {
+      padding: 18px 22px 14px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    /* Receipt No + Date top row */
+    .top-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 10px;
+      border-bottom: 1.5px solid #c8a96e;
+      margin-bottom: 4px;
+    }
+
+    .meta-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+    }
+
+    .meta-pill .meta-label {
+      font-weight: 700;
+      color: #8a6e2a;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 9.5px;
+    }
+
+    .meta-pill .meta-value {
+      font-weight: 600;
+      color: #2a1f0a;
+      font-size: 12px;
+      background: rgba(200, 169, 110, 0.12);
+      border: 1px solid rgba(200, 169, 110, 0.35);
+      border-radius: 5px;
+      padding: 2px 8px;
+    }
+
+    /* Data rows */
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 9px 0;
+      border-bottom: 1px dashed rgba(200, 169, 110, 0.4);
+      gap: 1rem;
+    }
+
+    .row:last-of-type {
+      border-bottom: none;
+    }
+
+    .label {
+      font-weight: 700;
+      font-size: 11px;
+      color: #8a6e2a;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      min-width: 110px;
+    }
+
+    .value {
+      font-weight: 500;
+      font-size: 13px;
+      color: #1a1208;
+      text-align: right;
+      flex: 1;
+    }
+
+    /* Amount box row */
+    .rowTwo {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 14px;
+      padding: 10px 14px;
+      background: linear-gradient(135deg, rgba(200, 169, 110, 0.1), rgba(200, 169, 110, 0.05));
+      border: 1.5px solid #c8a96e;
+      border-radius: 8px;
+      gap: 1rem;
+    }
+
+    .rowTwo .value {
+      font-weight: 800;
+      font-size: 16px;
+      color: #2a1f0a;
+      text-align: left;
+      letter-spacing: 0.04em;
+      flex: none;
+    }
+
+    .amount {
+      font-size: 11px;
+      font-weight: 600;
+      color: #8a6e2a;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      border-left: 2px solid rgba(200, 169, 110, 0.5);
+      padding-left: 12px;
+    }
+
+    /* ===== FOOTER AREA ===== */
+    .receipt-footer {
+      padding: 12px 22px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      border-top: 1.5px solid rgba(200, 169, 110, 0.35);
+      background: rgba(200, 169, 110, 0.04);
+    }
+
+    .signature-row {
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-end;
+      padding-right: 10px;
+    }
+
+    .signature-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .signature-line {
+      width: 100px;
+      height: 1px;
+      background: #c8a96e;
+      margin-bottom: 2px;
+    }
+
+    .signature-label {
+      font-size: 9px;
+      font-weight: 600;
+      color: #8a6e2a;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 9px;
+      color: #b09060;
+      letter-spacing: 0.04em;
+    }
+
+    .footer-content strong {
+      color: #8a6e2a;
+      font-weight: 700;
+    }
+
+    /* ===== PRINT STYLES ===== */
+    @media print {
+      @page {
+        size: A5 portrait;
+        margin: 0;
+      }
+
+      body {
+        background: #fff;
+        padding: 0;
+      }
+
+      .main-container {
+        width: 100%;
+        min-height: auto;
+      }
+
+      .receipt-container {
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+        border-top: 2px solid #c8a96e;
+        border-bottom: 1px solid #c8a96e;
+      }
+
+      .header-band {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .rowTwo {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .footer-content {
+        color: #999;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="main-container">
+    <div class="receipt-container">
+
+      <!-- ===== HEADER ===== -->
+      <div class="header-band">
+        <div class="header-center">
+          <h1>NIYAAZ-E-IMAM HUSSAIN (A.S)</h1>
+          <h2>Udaipur, Rajasthan</h2>
+        </div>
+        <div class="header-right">
+          <img src="assets/logo.png" alt="Logo">
+        </div>
+      </div>
+
+      <div class="gold-rule"></div>
+
+      <!-- ===== BODY ===== -->
+      <div class="receipt-body">
+
+        <!-- Receipt No + Date -->
+        <div class="top-meta">
+          <div class="meta-pill">
+            <span class="meta-label">Receipt No.</span>
+            <span class="meta-value" id="receipt-number"></span>
+          </div>
+          <div class="meta-pill">
+            <span class="meta-label">Date</span>
+            <span class="meta-value" id="r-date"></span>
+          </div>
+        </div>
+
+        <!-- Name -->
+        <div class="row">
+          <div class="label">Name</div>
+          <div class="value" id="r-name"></div>
+        </div>
+
+        <!-- Amount in Words -->
+        <div class="row">
+          <div class="label">Amount in Words</div>
+          <div class="value" id="r-amountWords"></div>
+        </div>
+
+        <!-- Regarding -->
+        <div class="row">
+          <div class="label">Regarding</div>
+          <div class="value" id="r-purpose"></div>
+        </div>
+
+        <!-- Amount figure box -->
+        <div class="rowTwo">
+          <div class="value" id="r-amount"></div>
+          <div class="amount">Received with Thanks</div>
+        </div>
+
+      </div>
+
+      <!-- ===== FOOTER ===== -->
+      <div class="receipt-footer">
+        <!-- <div class="signature-row">
+            <div class="signature-block">
+              <div class="signature-line"></div>
+              <span class="signature-label">Authorised Signature</span>
+            </div>
+          </div> -->
+        <div class="footer-content">
+          <span>&copy; 2025 All Rights Reserved. Made By &mdash; <strong>AIJAZ AHMED SIYAHI</strong></span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    const data = {
+      receiptNo: getQueryParam('no'),
+      name: getQueryParam('name'),
+      amount: getQueryParam('amount'),
+      amountWords: getQueryParam('amountWords'),
+      purpose: getQueryParam('purpose'),
+      date: getQueryParam('date'),
+    };
+
+    // Fill Original Receipt
+    document.getElementById("receipt-number").innerText = data.receiptNo;
+    document.getElementById("r-name").innerText = data.name;
+    document.getElementById("r-amount").innerText = `₹` + `         ` + data.amount + `  /-`;
+    document.getElementById("r-amountWords").innerText = data.amountWords;
+    document.getElementById("r-purpose").innerText = data.purpose;
+    document.getElementById("r-date").innerText = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).replace(/ /g, '-');
+
+    window.onload = () => {
+      console.log("🧾 Receipt page DOM fully loaded");
+    };
+  </script>
+
+</body>
+
+</html>
