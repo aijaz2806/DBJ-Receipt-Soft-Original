@@ -5,7 +5,7 @@ const XLSX = require("xlsx");
 
 let mainWindow;
 
-app.whenReady().then(() => {
+function createMainWindow() {
     mainWindow = new BrowserWindow({
         width: 1600,
         height: 900,
@@ -16,7 +16,26 @@ app.whenReady().then(() => {
         },
     });
 
-    mainWindow.loadFile("index.html");
+    mainWindow.loadFile(path.join(__dirname, "index.html"));
+    mainWindow.on("closed", () => {
+        mainWindow = null;
+    });
+}
+
+app.whenReady().then(() => {
+    createMainWindow();
+
+    app.on("activate", () => {
+        if (BrowserWindow.getAllWindows().length === 0) {
+            createMainWindow();
+        }
+    });
+});
+
+app.on("window-all-closed", () => {
+    if (process.platform !== "darwin") {
+        app.quit();
+    }
 });
 
 ipcMain.on("saveData", async (event, formData) => {
@@ -116,6 +135,11 @@ ipcMain.on("saveData", async (event, formData) => {
         
           // Step 2: Open native print dialog
           console.log("🖨️ Opening print dialog...");
+
+          /* Uncomment the following block if you want to show the print dialog after saving the PDF */
+          // printWindow.webContents.printToPDF();
+
+          /*  */
           setTimeout(() => {
             printWindow.webContents.print({
               silent: false,

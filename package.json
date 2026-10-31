@@ -28,5 +28,8 @@
     "electron-builder": "^26.0.6",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.4"
+  },
+  "allowScripts": {
+    "electron@24.8.8": true
   }
 }
